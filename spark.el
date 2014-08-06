@@ -80,4 +80,4 @@ Examples:
     (with-output-to-string 
       (cl-loop for n in numbers
                for nth = (floor (- n min) unit)
-               do (princ (string (svref *ticks* nth)))))))
+               do (princ (string (aref *ticks* nth)))))))
