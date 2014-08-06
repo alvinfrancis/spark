@@ -1,0 +1,3 @@
+* Spark
+
+  This is a straightforward port of [[https://github.com/tkych/cl-spark][cl-spark]] to emacs lisp.
