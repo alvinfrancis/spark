@@ -81,3 +81,33 @@ Examples:
       (cl-loop for n in numbers
                for nth = (floor (- n min) unit)
                do (princ (string (aref *ticks* nth)))))))
+
+(defun generate-bar (number unit min max num-content-ticks)
+  (multiple-value-bind
+      (units frac) (cl-floor (- number min) (* unit num-content-ticks))
+    (with-output-to-string
+      (let ((most-tick (aref *vticks* num-content-ticks)))
+        (dotimes (i units) (princ most-tick))
+        (unless (= number max)
+          ;; max number need not frac.
+          ;; if number = max, then always frac = 0.
+          (princ (aref *vticks* (floor frac unit))))
+        (terpri)))))
+
+(defun generate-title (title size max-lengeth-label)
+  (let* ((title-string (format "%s" title))
+         (mid (floor (- (if max-lengeth-label
+                            (+ 1 size max-lengeth-label)
+                          size)
+                        (length title-string)) 2)))
+    (when (plusp mid)
+      (format "%s\n"
+              (replace (make-string (if max-lengeth-label
+                                        (+ 1 size max-lengeth-label)
+                                      size)
+                                    ?\s)
+                       title-string :start1 mid)))))
+
+;; TODO: find way to ensure float returned is SINGLE-FLOAT
+(defun ensure-non-double-float (x)
+  (if (integerp x) x (float x)))
