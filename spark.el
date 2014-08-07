@@ -111,3 +111,24 @@ Examples:
                                     ?\s)
                        title-string :start1 mid)))))
 
+(defun generate-scale (min max size max-lengeth-label)
+  (let* ((min-string  (number-to-string min))
+         (max-string  (number-to-string max))
+         (num-padding (- size (length min-string) (length max-string))))
+    (when (plusp num-padding)
+      (let* ((mid        (/ (+ max min) 2.0))
+             (mid-string (to-string mid))
+             (num-indent (aif max-lengeth-label (1+ it) 0)))
+        (if (and (< (length mid-string) num-padding)
+                 (/= min mid)
+                 (/= mid max))
+            ;; A. mid exist case:
+            (cl-format nil "~V,0t~V<~a~;~a~;~a~>~
+                       ~%~V,0t~V,,,'-<~a~;~a~;~a~>~%"
+                    num-indent size min-string mid-string max-string
+                    num-indent size (char-to-string 747) "+" (char-to-string 743))
+          ;; B. no mid exist case:
+          (cl-format nil "~V,0t~V<~a~;~a~>~
+                       ~%~V,0t~V,,,'-<~a~;~a~>~%"
+                  num-indent size min-string max-string
+                  num-indent size (char-to-string 747) (char-to-string 743)))))))
