@@ -249,7 +249,7 @@ Examples:
          (num-padding (- size (length min-string) (length max-string))))
     (when (plusp num-padding)
       (let* ((mid        (/ (+ max min) 2.0))
-             (mid-string (to-string mid))
+             (mid-string (number-to-string mid))
              (num-indent (aif max-lengeth-label (1+ it) 0)))
         (if (and (< (length mid-string) num-padding)
                  (/= min mid)
