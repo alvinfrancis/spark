@@ -85,6 +85,138 @@ Examples:
                for nth = (floor (- n min) unit)
                do (princ (char-to-string (aref *ticks* nth)))))))
 
+;;--------------------------------------------------------------------
+;; Vspark
+;;--------------------------------------------------------------------
+
+(defvar *vticks*
+  (vector "▏" "▎" "▍" "▌" "▋" "▊" "▉" "█")
+  "A simple-vector of characters for representation of vartical
+sparklines. Default is #(#\▏ #\▎ #\▍ #\▌ #\▋ #\▊ #\▉ #\█).
+
+Examples:
+
+  ;; Japan GDP growth rate, annal
+  ;; see. http://data.worldbank.org/indicator/NY.GDP.MKTP.KD.ZG
+  (defparameter growth-rate
+   '((2007 . 2.192186) (2008 . -1.041636) (2009 . -5.5269766)
+     (2010 . 4.652112) (2011 . -0.57031655) (2012 . 1.945)))
+
+  (vspark growth-rate :key #'cdr :labels (mapcar #'car growth-rate))
+  =>
+  \"
+       -5.5269766        -0.4374323         4.652112
+       ˫---------------------+---------------------˧
+  2007 ██████████████████████████████████▏
+  2008 ███████████████████▊
+  2009 ▏
+  2010 ████████████████████████████████████████████
+  2011 █████████████████████▉
+  2012 █████████████████████████████████▏
+  \"
+
+  (let ((*vticks* #(#\- #\0 #\+)))
+    (vspark growth-rate :key (lambda (y-r) (float-sign (cdr y-r)))
+                        :labels (mapcar #'car growth-rate)
+                        :size 1))
+  =>
+  \"
+  2007 +
+  2008 -
+  2009 -
+  2010 +
+  2011 -
+  2012 +
+  \"
+")
+
+(cl-defun vspark
+    (numbers &key min max key (size 50) labels title (scale? t) (newline? t))
+  (check-type numbers  list)
+  (check-type min      (or null real))
+  (check-type max      (or null real))
+  (check-type key      (or symbol function))
+  (check-type size     (integer 1 *))
+  (check-type labels   list)
+
+  (when key (setf numbers (mapcar key numbers)))
+
+  ;; Empty data case:
+  (when (null numbers)
+    (cl-return-from vspark ""))
+
+  ;; Ensure min is the minimum number.
+  (if (null min)
+      (setf min (reduce #'min numbers))
+    (setf numbers (mapcar (lambda (n) (max n min)) numbers)))
+
+  ;; Ensure max is the maximum number.
+  (if (null max)
+      (setf max (reduce #'max numbers))
+    (setf numbers (mapcar (lambda (n) (min n max)) numbers)))
+
+  ;; Check max ~ min.
+  (cond ((< max min) (error "max %s < min %s." max min))
+        ((= max min) (incf max))        ; ensure all bars are in min.
+        (t nil))
+
+  (let ((max-lengeth-label nil))
+    (when labels
+      ;; Ensure num labels equals to num numbers.
+      (let ((diff (- (length numbers) (length labels))))
+        (cond ((plusp diff)
+               ;; Add padding lacking labels not to miss data.
+               (setf labels (append labels (cl-loop repeat diff collect ""))))
+              ((minusp diff)
+               ;; Remove superfluous labels to remove redundant spaces.
+               (setf labels (butlast labels (abs diff))))
+              (t nil)))
+      ;; Find max-lengeth-label.
+      (setf max-lengeth-label
+            (reduce #'max labels
+                    :key (lambda (label)
+                           (if (stringp label)
+                               (length label)
+                             (length (format "%s" label))))))
+
+      ;; ;; Canonicalize labels.
+      (let* ((control-string (cl-format nil "~~~d,,@a " max-lengeth-label)))
+        (setf labels
+              (mapcar (lambda (label) (cl-format nil control-string label))
+                      labels)))
+
+      ;; Reduce size for max-lengeth-label.
+      ;;  * 1 is space between label and bar
+      ;;  * ensure minimum size 1
+      (setf size (max 1 (- size 1 max-lengeth-label))))
+
+    (let* ((num-content-ticks (1- (length *vticks*)))
+           (unit (/ (float (- max min)) (* size num-content-ticks)))
+           (result '()))
+      (when (zerop unit) (setf unit 1))
+
+      (cl-loop for n in numbers
+               for i from 0
+               do (when labels (push (nth i labels) result))
+               (push (generate-bar n unit min max num-content-ticks)
+                     result)
+               finally (setf result (nreverse result)))
+
+      (when scale?
+        (awhen (generate-scale min max size max-lengeth-label)
+          (push it result)))
+
+      (when title
+        (awhen (generate-title title size max-lengeth-label)
+          (push it result)))
+
+      (if newline?
+          (apply 'concat (push (char-to-string ?\n) result))
+        ;; string-right-trim
+        (replace-regexp-in-string (rx (* (any " \t\n")) eos)
+                                  ""
+                                  (apply 'concat result))))))
+
 (defun generate-bar (number unit min max num-content-ticks)
   (multiple-value-bind
       (units frac) (cl-floor (- number min) (* unit num-content-ticks))
