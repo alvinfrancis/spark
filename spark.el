@@ -96,9 +96,9 @@ sparklines. Default is #(#\▏ #\▎ #\▍ #\▌ #\▋ #\▊ #\▉ #\█).
 
 Examples:
 
-  ;; Japan GDP growth rate, annal
+  ;; Japan GDP growth rate, annual
   ;; see. http://data.worldbank.org/indicator/NY.GDP.MKTP.KD.ZG
-  (defparameter growth-rate
+  (defvar growth-rate
    '((2007 . 2.192186) (2008 . -1.041636) (2009 . -5.5269766)
      (2010 . 4.652112) (2011 . -0.57031655) (2012 . 1.945)))
 
