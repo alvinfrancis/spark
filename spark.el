@@ -111,10 +111,3 @@ Examples:
                                     ?\s)
                        title-string :start1 mid)))))
 
-;; TODO: find way to ensure float returned is SINGLE-FLOAT
-(defun ensure-non-double-float (x)
-  (if (integerp x) x (float x)))
-
-(defun to-string (n)
-  (format "%s" (ensure-non-double-float n)))
-
