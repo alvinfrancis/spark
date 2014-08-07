@@ -2,6 +2,9 @@
 ;; Spark
 ;;--------------------------------------------------------------------
 
+(require 'cl-format)
+(require 'anaphora)
+
 (defvar *ticks*
   (vector ?▁ ?▂ ?▃ ?▄ ?▅ ?▆ ?▇ ?█)
   " A simple-vector of characters for representation of
