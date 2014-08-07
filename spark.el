@@ -80,7 +80,7 @@ Examples:
     (with-output-to-string 
       (cl-loop for n in numbers
                for nth = (floor (- n min) unit)
-               do (princ (string (aref *ticks* nth)))))))
+               do (princ (char-to-string (aref *ticks* nth)))))))
 
 (defun generate-bar (number unit min max num-content-ticks)
   (multiple-value-bind
