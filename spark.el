@@ -1,3 +1,10 @@
+;; This software uses code ported from cl-spark:
+;; Copyright (c) 2013 Takaya OCHIAI <tkych.repl@gmail.com>
+;; This software is released under the MIT License.
+;; For more details, see spark/LICENSE
+
+;; Copyright (c) 2014 Alvin Francis Dumalus <alvin.francis.dumalus@gmail.com>
+
 ;;--------------------------------------------------------------------
 ;; Spark
 ;;--------------------------------------------------------------------
