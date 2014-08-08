@@ -132,6 +132,124 @@ Examples:
 
 (cl-defun spark-v
     (numbers &key min max key (size 50) labels title (scale? t) (newline? t))
+"Generates a vartical sparkline string for a list of real numbers.
+
+Usage: SPARK-V <numbers> &key <min> <max> <key> <size>
+                             <labels> <title> <scale?> <newline?>
+
+  * <numbers>  ::= <list> of <real-number>
+  * <min>      ::= { <null> | <real-number> }, default is NIL
+  * <max>      ::= { <null> | <real-number> }, default is NIL
+  * <key>      ::= <function>
+  * <size>     ::= <integer 1 *>, default is 50
+  * <labels>   ::= <list>
+  * <title>    ::= <object>, default is NIL
+  * <scale?>   ::= <generalized-boolean>, default is T
+  * <newline?> ::= <generalized-boolean>, default is T
+
+  * <numbers>  ~ data.
+  * <min>      ~ lower bound of output.
+                 NIL means the minimum value of the data.
+  * <max>      ~ upper bound of output.
+                 NIL means the maximum value of the data.
+  * <key>      ~ function for preparing data.
+  * <size>     ~ maximum number of output columns (contains label).
+  * <labels>   ~ labels for data.
+  * <title>    ~ If title is too big for size, it is not printed.
+  * <scale?>   ~ If T, output graph with scale for easy to see.
+                 If string length of min and max is too big for size,
+                 the scale is not printed.
+  * <newline?> ~ If T, output graph with newlines for easy to see.
+
+
+Examples:
+
+  ;; Life expectancy by WHO region, 2011, bothsexes
+  ;; see. http://apps.who.int/gho/data/view.main.690
+  (defvar life-expectancies '((\"Africa\" 56)
+                              (\"Americans\" 76)
+                              (\"South-East Asia\" 67)
+                              (\"Europe\" 76)
+                              (\"Eastern Mediterranean\" 68)
+                              (\"Western Pacific\" 76)
+                              (\"Global\" 70)))
+
+  (spark-v life-expectancies :key #'second :scale? nil :newline? nil)
+  =>
+  \"▏
+  ██████████████████████████████████████████████████
+  ███████████████████████████▌
+  ██████████████████████████████████████████████████
+  ██████████████████████████████▏
+  ██████████████████████████████████████████████████
+  ███████████████████████████████████▏\"
+
+  (spark-v life-expectancies :min 50 :max 80
+                            :key    #'second
+                            :labels (mapcar #'first life-expectancies)
+                            :title \"Life Expectancy\")
+  =>
+  \"
+                   Life Expectancy                  
+                        50           65           80
+                        ˫------------+-------------˧
+                 Africa █████▋
+              Americans ████████████████████████▎
+        South-East Asia ███████████████▉
+                 Europe ████████████████████████▎
+  Eastern Mediterranean ████████████████▊
+        Western Pacific ████████████████████████▎
+                 Global ██████████████████▋
+  \"
+
+  (spark-v '(0 1 2 3 4 5 6 7 8) :key (lambda (x) (sin (* x pi 1/4)))
+                               :size 20)
+  \"
+  -1.0     0.0     1.0
+  ˫--------+---------˧
+  ██████████▏
+  █████████████████▏
+  ████████████████████
+  █████████████████▏
+  ██████████▏
+  ██▉
+  ▏
+  ██▉
+  █████████▉
+  \"
+
+  (spark-v '(0 1 2 3 4 5 6 7 8) :key (lambda (x) (sin (* x pi 1/4)))
+                               :size 10)
+  =>
+  \"
+  -1.0   1.0
+  ˫--------˧
+  █████▏
+  ████████▏
+  ██████████
+  ████████▏
+  █████▏
+  █▏
+  ▏
+  █▏
+  ████▏
+  \"
+
+  (spark-v '(0 1 2 3 4 5 6 7 8) :key (lambda (x) (sin (* x pi 1/4)))
+                               :size 1)
+  =>
+  \"
+  ▌
+  ▊
+  █
+  ▊
+  ▌
+  ▎
+  ▏
+  ▎
+  ▌
+  \""
+
   (check-type numbers  list)
   (check-type min      (or null real))
   (check-type max      (or null real))
