@@ -3,7 +3,11 @@
 ;; This software is released under the MIT License.
 ;; For more details, see spark/LICENSE
 
-;; Copyright (c) 2014 Alvin Francis Dumalus <alvin.francis.dumalus@gmail.com>
+;; Author: Alvin Francis Dumalus
+;; Version: 20140809.2357
+;; X-Original-Version: 24 (beta)
+;; Keywords: lisp data
+;; Package-Requires: ((cl-format) (anaphora))
 
 ;;--------------------------------------------------------------------
 ;; Spark
