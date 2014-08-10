@@ -7,14 +7,13 @@
 ;; Version: 20140809.2357
 ;; X-Original-Version: 24 (beta)
 ;; Keywords: lisp data
-;; Package-Requires: ((cl-format) (anaphora))
+;; Package-Requires: ((cl-format "1.1"))
 
 ;;--------------------------------------------------------------------
 ;; Spark
 ;;--------------------------------------------------------------------
 
 (require 'cl-format)
-(require 'anaphora)
 
 (defvar *spark-ticks*
   (vector ?▁ ?▂ ?▃ ?▄ ?▅ ?▆ ?▇ ?█)
@@ -332,12 +331,12 @@ Examples:
                finally (setf result (nreverse result)))
 
       (when scale?
-        (awhen (spark--generate-scale min max size max-lengeth-label)
-          (push it result)))
+        (let ((it (spark--generate-scale min max size max-lengeth-label)))
+          (when it (push it result))))
 
       (when title
-        (awhen (spark--generate-title title size max-lengeth-label)
-          (push it result)))
+        (let ((it (spark--generate-title title size max-lengeth-label)))
+          (when it (push it result))))
 
       (if newline?
           (apply 'concat (push (char-to-string ?\n) result))
@@ -379,7 +378,7 @@ Examples:
     (when (plusp num-padding)
       (let* ((mid        (/ (+ max min) 2.0))
              (mid-string (number-to-string mid))
-             (num-indent (aif max-lengeth-label (1+ it) 0)))
+             (num-indent (if max-lengeth-label (1+ max-lengeth-label) 0)))
         (if (and (< (length mid-string) num-padding)
                  (/= min mid)
                  (/= mid max))
