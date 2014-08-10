@@ -213,7 +213,7 @@ Examples:
                  Global ██████████████████▋
   \"
 
-  (spark-v '(0 1 2 3 4 5 6 7 8) :key (lambda (x) (sin (* x pi 1/4)))
+  (spark-v '(0 1 2 3 4 5 6 7 8) :key (lambda (x) (sin (* x pi (/ 1.0 4)))
                                :size 20)
   \"
   -1.0     0.0     1.0
@@ -229,7 +229,7 @@ Examples:
   █████████▉
   \"
 
-  (spark-v '(0 1 2 3 4 5 6 7 8) :key (lambda (x) (sin (* x pi 1/4)))
+  (spark-v '(0 1 2 3 4 5 6 7 8) :key (lambda (x) (sin (* x pi (/ 1.0 4)))
                                :size 10)
   =>
   \"
@@ -246,7 +246,7 @@ Examples:
   ████▏
   \"
 
-  (spark-v '(0 1 2 3 4 5 6 7 8) :key (lambda (x) (sin (* x pi 1/4)))
+  (spark-v '(0 1 2 3 4 5 6 7 8) :key (lambda (x) (sin (* x pi (/ 1.0 4)))
                                :size 1)
   =>
   \"
