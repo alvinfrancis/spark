@@ -375,11 +375,11 @@ Examples:
       (units frac) (cl-floor (- number min) (* unit num-content-ticks))
     (with-output-to-string
       (let ((most-tick (aref *spark-vticks* num-content-ticks)))
-        (dotimes (i units) (princ most-tick))
+        (dotimes (i units) (princ (char-to-string most-tick)))
         (unless (= number max)
           ;; max number need not frac.
           ;; if number = max, then always frac = 0.
-          (princ (aref *spark-vticks* (floor frac unit))))
+          (princ (char-to-string (aref *spark-vticks* (floor frac unit)))))
         (terpri)))))
 
 (defun spark--generate-title (title size max-lengeth-label)
