@@ -167,7 +167,7 @@ Examples:
 
 (cl-defun spark-v
     (numbers &key min max key (size 50) labels title (scale? t) (newline? t))
-"Generates a vartical sparkline string for a list of real numbers.
+"Generates a vertical sparkline string for a list of real numbers.
 
 Usage: SPARK-V <numbers> &key <min> <max> <key> <size>
                              <labels> <title> <scale?> <newline?>
@@ -225,7 +225,7 @@ Examples:
                             :title \"Life Expectancy\")
   =>
   \"
-                   Life Expectancy                  
+                   Life Expectancy
                         50           65           80
                         ˫------------+-------------˧
                  Africa █████▋
