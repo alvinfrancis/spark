@@ -1,3 +1,5 @@
+;;; spark.el --- sparkline generation -*- lexical-binding: t -*-
+
 ;; This software uses code ported from cl-spark:
 ;; Copyright (c) 2013 Takaya OCHIAI <tkych.repl@gmail.com>
 ;; This software is released under the MIT License.
@@ -6,8 +8,32 @@
 ;; Author: Alvin Francis Dumalus
 ;; Version: 20140809.2357
 ;; X-Original-Version: 24 (beta)
-;; Keywords: lisp data
-;; Package-Requires: ((cl-format "1.1"))
+;; Keywords: lisp, data
+;; Package-Requires: ((cl-lib "1.0") (cl-format "1.1"))
+
+;; This file is NOT part of GNU Emacs.
+
+;;; Commentary:
+
+;; Spark is a straightforward Emacs Lisp port of Takaya OCHIAI's
+;; cl-spark.
+
+;; Note: The characters used by spark is also dependent on face.
+
+;; Use `spark' to generate a sparkline string.  Use `spark-v' to
+;; instead create a vertical bar graph.
+
+;; The `*spark-ticks*' and `*spark-vticks*' variables hold the
+;; characters used to draw the graph for `spark' and `spark-v'
+;; respectively.
+
+;; Usage:
+
+;; (require 'spark)
+;; (spark '(0 30 55 80 33 150)) => \"▁▂▃▅▂█\"
+
+;;; Code:
+
 
 ;;--------------------------------------------------------------------
 ;; Spark
