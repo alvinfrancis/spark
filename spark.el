@@ -116,7 +116,7 @@ Examples:
 
   (let ((unit (/ (- max min) (float (1- (length *spark-ticks*))))))
     (when (zerop unit) (setf unit 1))
-    (with-output-to-string 
+    (with-output-to-string
       (cl-loop for n in numbers
                for nth = (floor (- n min) unit)
                do (princ (char-to-string (aref *spark-ticks* nth)))))))
