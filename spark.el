@@ -43,8 +43,8 @@
 
 (defvar *spark-ticks*
   (vector ?▁ ?▂ ?▃ ?▄ ?▅ ?▆ ?▇ ?█)
-  " A simple-vector of characters for representation of
-sparklines.  Default is #(#\▁ #\▂ #\▃ #\▄ #\▅ #\▆ #\▇ #\█).
+  "A simple-vector of characters for representation of sparklines.
+Default is (vector ?▁ ?▂ ?▃ ?▄ ?▅ ?▆ ?▇ ?█).
 
 Examples:
 
@@ -52,12 +52,12 @@ Examples:
 
   (spark ternary)              => \"▁▄█▁█▄▁█▁\"
 
-  (let ((*spark-ticks* #(#\_ #\- #\¯)))
+  (let ((*spark-ticks* (vector ?_ ?- ?¯)))
     (spark ternary))           => \"_-¯_¯-_¯_\"
 
-  (let ((*spark-ticks* #(#\▄ #\⎯ #\▀)))
-    (spark ternary))           => \"▄⎯▀▄▀⎯▄▀▄\"
-") 
+
+(let ((*spark-ticks* (vector ?▄ ?⎯ ?▀)))
+    (spark ternary))           => \"▄⎯▀▄▀⎯▄▀▄\"")
 
 (cl-defun spark (numbers &key min max key)
   "Generates a sparkline string for a list of real numbers.
