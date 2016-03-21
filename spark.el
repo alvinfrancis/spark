@@ -417,3 +417,7 @@ Examples:
                        ~%~V,0t~V,,,'-<~a~;~a~>~%"
                   num-indent size min-string max-string
                   num-indent size (char-to-string 747) (char-to-string 743)))))))
+
+(provide 'spark)
+
+;;; spark.el ends here
