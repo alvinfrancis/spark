@@ -126,14 +126,14 @@ Examples:
 ;;--------------------------------------------------------------------
 
 (defvar *spark-vticks*
-  (vector "▏" "▎" "▍" "▌" "▋" "▊" "▉" "█")
-  "A simple-vector of characters for representation of vartical
-sparklines. Default is #(#\▏ #\▎ #\▍ #\▌ #\▋ #\▊ #\▉ #\█).
+  (vector ?▏ ?▎ ?▍ ?▌ ?▋ ?▊ ?▉ ?█)
+  "A simple-vector of characters for representation of vertical sparklines.
+Default is (vector ?▏ ?▎ ?▍ ?▌ ?▋ ?▊ ?▉ ?█).
 
 Examples:
 
   ;; Japan GDP growth rate, annual
-  ;; see. http://data.worldbank.org/indicator/NY.GDP.MKTP.KD.ZG
+  ;; see:  http://data.worldbank.org/indicator/NY.GDP.MKTP.KD.ZG
   (defvar growth-rate
    '((2007 . 2.192186) (2008 . -1.041636) (2009 . -5.5269766)
      (2010 . 4.652112) (2011 . -0.57031655) (2012 . 1.945)))
@@ -151,8 +151,8 @@ Examples:
   2012 █████████████████████████████████▏
   \"
 
-  (let ((*spark-vticks* #(#\- #\0 #\+)))
-    (spark-v growth-rate :key (lambda (y-r) (float-sign (cdr y-r)))
+  (let ((*spark-vticks* (vector \"-\" \"0\" \"+\")))
+    (spark-v growth-rate :key (lambda (y-r) (signum (cdr y-r)))
                         :labels (mapcar #'car growth-rate)
                         :size 1))
   =>
@@ -163,8 +163,7 @@ Examples:
   2010 +
   2011 -
   2012 +
-  \"
-")
+  \"")
 
 (cl-defun spark-v
     (numbers &key min max key (size 50) labels title (scale? t) (newline? t))
