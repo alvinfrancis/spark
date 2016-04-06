@@ -151,7 +151,7 @@ Examples:
   2012 █████████████████████████████████▏
   \"
 
-  (let ((*spark-vticks* (vector \"-\" \"0\" \"+\")))
+  (let ((*spark-vticks* (vector ?- ?0 ?+)))
     (spark-v growth-rate :key (lambda (y-r) (signum (cdr y-r)))
                         :labels (mapcar #'car growth-rate)
                         :size 1))
@@ -221,9 +221,9 @@ Examples:
   ███████████████████████████████████▏\"
 
   (spark-v life-expectancies :min 50 :max 80
-                            :key    #'second
-                            :labels (mapcar #'first life-expectancies)
-                            :title \"Life Expectancy\")
+                             :key    #'second
+                             :labels (mapcar #'first life-expectancies)
+                             :title \"Life Expectancy\")
   =>
   \"
                    Life Expectancy
@@ -239,7 +239,7 @@ Examples:
   \"
 
   (spark-v '(0 1 2 3 4 5 6 7 8) :key (lambda (x) (sin (* x pi (/ 1.0 4))))
-                               :size 20)
+                                :size 20)
   \"
   -1.0     0.0     1.0
   ˫--------+---------˧
@@ -255,7 +255,7 @@ Examples:
   \"
 
   (spark-v '(0 1 2 3 4 5 6 7 8) :key (lambda (x) (sin (* x pi (/ 1.0 4))))
-                               :size 10)
+                                :size 10)
   =>
   \"
   -1.0   1.0
@@ -272,7 +272,7 @@ Examples:
   \"
 
   (spark-v '(0 1 2 3 4 5 6 7 8) :key (lambda (x) (sin (* x pi (/ 1.0 4))))
-                               :size 1)
+                                :size 1)
   =>
   \"
   ▌
