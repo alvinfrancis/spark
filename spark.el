@@ -35,9 +35,8 @@
 
 ;;; Code:
 
-(eval-when-compile
-  (require 'cl-lib)
-  (require 'cl-format))
+(require 'cl-lib)
+(require 'cl-format)
 
 ;;--------------------------------------------------------------------
 ;; Spark
@@ -62,7 +61,7 @@ Examples:
   :group 'spark
   :type 'sexp)
 
-;;;##autoload
+;;;###autoload
 (cl-defun spark (numbers &key min max key)
   "Generates a sparkline string for a list of real numbers.
 
@@ -107,12 +106,12 @@ Examples:
 
   ;; Ensure min is the minimum number.
   (if (null min)
-      (setf min (reduce #'min numbers))
+      (setf min (cl-reduce #'min numbers))
     (setf numbers (mapcar (lambda (n) (max n min)) numbers)))
 
   ;; Ensure max is the maximum number.
   (if (null max)
-      (setf max (reduce #'max numbers))
+      (setf max (cl-reduce #'max numbers))
     (setf numbers (mapcar (lambda (n) (min n max)) numbers)))
 
   (when (< max min)
@@ -171,10 +170,10 @@ Examples:
   :group 'spark
   :type 'sexp)
 
-;;;##autoload
+;;;###autoload
 (cl-defun spark-v
     (numbers &key min max key (size 50) labels title (scale? t) (newline? t))
-"Generates a vertical sparkline string for a list of real numbers.
+  "Generates a vertical sparkline string for a list of real numbers.
 
 Usage: SPARK-V <numbers> &key <min> <max> <key> <size>
                              <labels> <title> <scale?> <newline?>
@@ -307,12 +306,12 @@ Examples:
 
   ;; Ensure min is the minimum number.
   (if (null min)
-      (setf min (reduce #'min numbers))
+      (setf min (cl-reduce #'min numbers))
     (setf numbers (mapcar (lambda (n) (max n min)) numbers)))
 
   ;; Ensure max is the maximum number.
   (if (null max)
-      (setf max (reduce #'max numbers))
+      (setf max (cl-reduce #'max numbers))
     (setf numbers (mapcar (lambda (n) (min n max)) numbers)))
 
   ;; Check max ~ min.
@@ -333,11 +332,11 @@ Examples:
               (t nil)))
       ;; Find max-lengeth-label.
       (setf max-lengeth-label
-            (reduce #'max labels
-                    :key (lambda (label)
-                           (if (stringp label)
-                               (length label)
-                             (length (format "%s" label))))))
+            (cl-reduce #'max labels
+                       :key (lambda (label)
+                              (if (stringp label)
+                                  (length label)
+                                (length (format "%s" label))))))
 
       ;; ;; Canonicalize labels.
       (let* ((control-string (cl-format nil "~~~d,,@a " max-lengeth-label)))
@@ -382,7 +381,7 @@ Examples:
       (units frac) (cl-floor (- number min) (* unit num-content-ticks))
     (with-output-to-string
       (let ((most-tick (aref spark-vticks num-content-ticks)))
-        (dotimes (i units) (princ (char-to-string most-tick)))
+        (dotimes (_ units) (princ (char-to-string most-tick)))
         (unless (= number max)
           ;; max number need not frac.
           ;; if number = max, then always frac = 0.
@@ -397,11 +396,11 @@ Examples:
                         (length title-string)) 2)))
     (when (plusp mid)
       (format "%s\n"
-              (replace (make-string (if max-lengeth-label
-                                        (+ 1 size max-lengeth-label)
-                                      size)
-                                    ?\s)
-                       title-string :start1 mid)))))
+              (cl-replace (make-string (if max-lengeth-label
+                                           (+ 1 size max-lengeth-label)
+                                         size)
+                                       ?\s)
+                          title-string :start1 mid)))))
 
 (defun spark--generate-scale (min max size max-lengeth-label)
   (let* ((min-string  (number-to-string min))
