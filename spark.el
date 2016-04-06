@@ -411,13 +411,13 @@ Examples:
             ;; A. mid exist case:
             (cl-format nil "~V,0t~V<~a~;~a~;~a~>~
                        ~%~V,0t~V,,,'-<~a~;~a~;~a~>~%"
-                    num-indent size min-string mid-string max-string
-                    num-indent size (char-to-string 747) "+" (char-to-string 743))
+                       num-indent size min-string mid-string max-string
+                       num-indent size (char-to-string 747) "+" (char-to-string 743))
           ;; B. no mid exist case:
           (cl-format nil "~V,0t~V<~a~;~a~>~
                        ~%~V,0t~V,,,'-<~a~;~a~>~%"
-                  num-indent size min-string max-string
-                  num-indent size (char-to-string 747) (char-to-string 743)))))))
+                     num-indent size min-string max-string
+                     num-indent size (char-to-string 747) (char-to-string 743)))))))
 
 (provide 'spark)
 
