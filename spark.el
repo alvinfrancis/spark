@@ -35,8 +35,9 @@
 
 ;;; Code:
 
-(require 'cl-lib)
-(require 'cl-format)
+(eval-when-compile
+  (require 'cl-lib)
+  (require 'cl-format))
 
 ;;--------------------------------------------------------------------
 ;; Spark
