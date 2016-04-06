@@ -58,6 +58,7 @@ Examples:
   (let ((*spark-ticks* (vector ?▄ ?⎯ ?▀)))
     (spark ternary))           => \"▄⎯▀▄▀⎯▄▀▄\"")
 
+;;;##autoload
 (cl-defun spark (numbers &key min max key)
   "Generates a sparkline string for a list of real numbers.
 
@@ -164,6 +165,7 @@ Examples:
   2012 +
   \"")
 
+;;;##autoload
 (cl-defun spark-v
     (numbers &key min max key (size 50) labels title (scale? t) (newline? t))
 "Generates a vertical sparkline string for a list of real numbers.
