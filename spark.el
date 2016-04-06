@@ -9,7 +9,7 @@
 ;; Version: 20140809.2357
 ;; X-Original-Version: 24 (beta)
 ;; Keywords: lisp, data
-;; Package-Requires: ((cl-lib "1.0") (cl-format "1.1"))
+;; Package-Requires: ((emacs "24.3") (cl-format "1.1"))
 
 ;; This file is NOT part of GNU Emacs.
 
