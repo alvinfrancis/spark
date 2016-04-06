@@ -55,8 +55,7 @@ Examples:
   (let ((*spark-ticks* (vector ?_ ?- ?¯)))
     (spark ternary))           => \"_-¯_¯-_¯_\"
 
-
-(let ((*spark-ticks* (vector ?▄ ?⎯ ?▀)))
+  (let ((*spark-ticks* (vector ?▄ ?⎯ ?▀)))
     (spark ternary))           => \"▄⎯▀▄▀⎯▄▀▄\"")
 
 (cl-defun spark (numbers &key min max key)
