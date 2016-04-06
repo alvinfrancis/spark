@@ -43,9 +43,9 @@
 ;;--------------------------------------------------------------------
 
 (defcustom spark-ticks
-  (vector ?▁ ?▂ ?▃ ?▄ ?▅ ?▆ ?▇ ?█)
+  [?▁ ?▂ ?▃ ?▄ ?▅ ?▆ ?▇ ?█]
   "A simple-vector of characters for representation of sparklines.
-Default is (vector ?▁ ?▂ ?▃ ?▄ ?▅ ?▆ ?▇ ?█).
+Default is [?▁ ?▂ ?▃ ?▄ ?▅ ?▆ ?▇ ?█].
 
 Examples:
 
@@ -57,7 +57,9 @@ Examples:
     (spark ternary))           => \"_-¯_¯-_¯_\"
 
   (let ((spark-ticks (vector ?▄ ?⎯ ?▀)))
-    (spark ternary))           => \"▄⎯▀▄▀⎯▄▀▄\"")
+    (spark ternary))           => \"▄⎯▀▄▀⎯▄▀▄\""
+  :group 'spark
+  :type 'sexp)
 
 ;;;##autoload
 (cl-defun spark (numbers &key min max key)
@@ -127,9 +129,9 @@ Examples:
 ;;--------------------------------------------------------------------
 
 (defcustom spark-vticks
-  (vector ?▏ ?▎ ?▍ ?▌ ?▋ ?▊ ?▉ ?█)
+  [?▏ ?▎ ?▍ ?▌ ?▋ ?▊ ?▉ ?█]
   "A simple-vector of characters for representation of vertical sparklines.
-Default is (vector ?▏ ?▎ ?▍ ?▌ ?▋ ?▊ ?▉ ?█).
+Default is [?▏ ?▎ ?▍ ?▌ ?▋ ?▊ ?▉ ?█].
 
 Examples:
 
@@ -164,7 +166,9 @@ Examples:
   2010 +
   2011 -
   2012 +
-  \"")
+  \""
+  :group 'spark
+  :type 'sexp)
 
 ;;;##autoload
 (cl-defun spark-v
