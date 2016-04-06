@@ -24,7 +24,7 @@
 ;; Use `spark' to generate a sparkline string.  Use `spark-v' to
 ;; instead create a vertical bar graph.
 
-;; The `*spark-ticks*' and `*spark-vticks*' variables hold the
+;; The `spark-ticks' and `spark-vticks' variables hold the
 ;; characters used to draw the graph for `spark' and `spark-v'
 ;; respectively.
 
@@ -42,7 +42,7 @@
 ;; Spark
 ;;--------------------------------------------------------------------
 
-(defvar *spark-ticks*
+(defcustom spark-ticks
   (vector ?▁ ?▂ ?▃ ?▄ ?▅ ?▆ ?▇ ?█)
   "A simple-vector of characters for representation of sparklines.
 Default is (vector ?▁ ?▂ ?▃ ?▄ ?▅ ?▆ ?▇ ?█).
@@ -53,10 +53,10 @@ Examples:
 
   (spark ternary)              => \"▁▄█▁█▄▁█▁\"
 
-  (let ((*spark-ticks* (vector ?_ ?- ?¯)))
+  (let ((spark-ticks (vector ?_ ?- ?¯)))
     (spark ternary))           => \"_-¯_¯-_¯_\"
 
-  (let ((*spark-ticks* (vector ?▄ ?⎯ ?▀)))
+  (let ((spark-ticks (vector ?▄ ?⎯ ?▀)))
     (spark ternary))           => \"▄⎯▀▄▀⎯▄▀▄\"")
 
 ;;;##autoload
@@ -115,18 +115,18 @@ Examples:
   (when (< max min)
     (error "max %s < min %s." max min))
 
-  (let ((unit (/ (- max min) (float (1- (length *spark-ticks*))))))
+  (let ((unit (/ (- max min) (float (1- (length spark-ticks))))))
     (when (zerop unit) (setf unit 1))
     (with-output-to-string
       (cl-loop for n in numbers
                for nth = (floor (- n min) unit)
-               do (princ (char-to-string (aref *spark-ticks* nth)))))))
+               do (princ (char-to-string (aref spark-ticks nth)))))))
 
 ;;--------------------------------------------------------------------
 ;; Spark-V
 ;;--------------------------------------------------------------------
 
-(defvar *spark-vticks*
+(defcustom spark-vticks
   (vector ?▏ ?▎ ?▍ ?▌ ?▋ ?▊ ?▉ ?█)
   "A simple-vector of characters for representation of vertical sparklines.
 Default is (vector ?▏ ?▎ ?▍ ?▌ ?▋ ?▊ ?▉ ?█).
@@ -152,7 +152,7 @@ Examples:
   2012 █████████████████████████████████▏
   \"
 
-  (let ((*spark-vticks* (vector ?- ?0 ?+)))
+  (let ((spark-vticks (vector ?- ?0 ?+)))
     (spark-v growth-rate :key (lambda (y-r) (signum (cdr y-r)))
                         :labels (mapcar #'car growth-rate)
                         :size 1))
@@ -345,7 +345,7 @@ Examples:
       ;;  * ensure minimum size 1
       (setf size (max 1 (- size 1 max-lengeth-label))))
 
-    (let* ((num-content-ticks (1- (length *spark-vticks*)))
+    (let* ((num-content-ticks (1- (length spark-vticks)))
            (unit (/ (float (- max min)) (* size num-content-ticks)))
            (result '()))
       (when (zerop unit) (setf unit 1))
@@ -376,12 +376,12 @@ Examples:
   (multiple-value-bind
       (units frac) (cl-floor (- number min) (* unit num-content-ticks))
     (with-output-to-string
-      (let ((most-tick (aref *spark-vticks* num-content-ticks)))
+      (let ((most-tick (aref spark-vticks num-content-ticks)))
         (dotimes (i units) (princ (char-to-string most-tick)))
         (unless (= number max)
           ;; max number need not frac.
           ;; if number = max, then always frac = 0.
-          (princ (char-to-string (aref *spark-vticks* (floor frac unit)))))
+          (princ (char-to-string (aref spark-vticks (floor frac unit)))))
         (terpri)))))
 
 (defun spark--generate-title (title size max-lengeth-label)
