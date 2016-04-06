@@ -16,7 +16,7 @@
 ;;; Commentary:
 
 ;; Spark is a straightforward Emacs Lisp port of Takaya OCHIAI's
-;; cl-spark.
+;; cl-spark: https://github.com/tkych/cl-spark
 
 ;; Note: The characters used by spark is also dependent on face.
 
