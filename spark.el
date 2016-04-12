@@ -9,7 +9,7 @@
 ;; Author: Alvin Francis Dumalus
 ;; Version: 20160406.1500
 ;; Keywords: lisp, data
-;; Package-Requires: ((emacs "24.3") (cl-format "1.1"))
+;; Package-Requires: ((emacs "24.3"))
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -35,7 +35,6 @@
 ;;; Code:
 
 (require 'cl-lib)
-(require 'cl-format)
 
 ;;--------------------------------------------------------------------
 ;; Spark
@@ -338,9 +337,9 @@ Examples:
                                 (length (format "%s" label))))))
 
       ;; ;; Canonicalize labels.
-      (let* ((control-string (cl-format nil "~~~d,,@a " max-lengeth-label)))
+      (let* ((control-string (format "%%0%ds " max-lengeth-label)))
         (setf labels
-              (mapcar (lambda (label) (cl-format nil control-string label))
+              (mapcar (lambda (label) (format control-string label))
                       labels)))
 
       ;; Reduce size for max-lengeth-label.
@@ -401,6 +400,34 @@ Examples:
                                        ?\s)
                           title-string :start1 mid)))))
 
+(defun spark--justify-space-lengths (num-spaces num-elements)
+
+  (if (<= num-elements 1)
+      nil
+    (let* ((lengths (make-list (1- num-elements) 0)))
+      (cl-loop repeat num-spaces
+               with n = 0
+               do (progn
+                    (incf (nth n lengths))
+                    (if (< n (1- (1- num-elements)))
+                        (incf n)
+                      (setf n 0))))
+      lengths)))
+
+(defun spark--justify-interleave-spaces (strs spaces)
+  (cond ((and (eql strs nil) (eql spaces nil)) nil)
+        ((eql strs nil) (cons nil (spark--justify-interleave-spaces spaces strs))) ;; rule #2, current value is nil
+        (t (cons (first strs) (spark--justify-interleave-spaces spaces (rest strs))))))
+
+(defun spark--justify-strings (mincol strs &optional padchar)
+  (let* ((padchar (or padchar 32))
+         (leftover-space (- mincol
+                            (length (apply #'concatenate 'string strs))))
+         (spaces (mapcar (lambda (l)
+                           (make-string l padchar))
+                         (spark--justify-space-lengths leftover-space (length strs)))))
+    (apply #'concatenate 'string (spark--justify-interleave-spaces strs spaces))))
+
 (defun spark--generate-scale (min max size max-lengeth-label)
   (let* ((min-string  (number-to-string min))
          (max-string  (number-to-string max))
@@ -413,15 +440,29 @@ Examples:
                  (/= min mid)
                  (/= mid max))
             ;; A. mid exist case:
-            (cl-format nil "~V,0t~V<~a~;~a~;~a~>~
-                       ~%~V,0t~V,,,'-<~a~;~a~;~a~>~%"
-                       num-indent size min-string mid-string max-string
-                       num-indent size (char-to-string 747) "+" (char-to-string 743))
+            (format "%s%s\n%s%s\n"
+                    (make-string num-indent 32)
+                    (spark--justify-strings size
+                                            (list min-string
+                                                  mid-string
+                                                  max-string))
+                    (make-string num-indent 32)
+                    (spark--justify-strings size
+                                            (list (char-to-string 747)
+                                                  "+"
+                                                  (char-to-string 743))
+                                            ?\-))
           ;; B. no mid exist case:
-          (cl-format nil "~V,0t~V<~a~;~a~>~
-                       ~%~V,0t~V,,,'-<~a~;~a~>~%"
-                     num-indent size min-string max-string
-                     num-indent size (char-to-string 747) (char-to-string 743)))))))
+          (format "%s%s\n%s%s\n"
+                  (make-string num-indent 32)
+                  (spark--justify-strings size
+                                          (list min-string
+                                                max-string))
+                  (make-string num-indent 32)
+                  (spark--justify-strings size
+                                          (list (char-to-string 747)
+                                                (char-to-string 743))
+                                          ?\-)))))))
 
 (provide 'spark)
 
