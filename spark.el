@@ -7,6 +7,7 @@
 ;; For more details, see spark/LICENSE
 
 ;; Author: Alvin Francis Dumalus
+;; URL: https://github.com/alvinfrancis/spark
 ;; Version: 20160412.1606
 ;; Keywords: lisp, data
 ;; Package-Requires: ((emacs "24.3"))
