@@ -1,3 +1,164 @@
 * Spark
 
   This is a straightforward port of [[https://github.com/tkych/cl-spark][cl-spark]] to emacs lisp.
+
+* Usage
+
+** Spark
+
+#+BEGIN_SRC lisp
+  (spark '(1 0 1 0))     => "█▁█▁"
+  (spark '(1 0 1 0 0.5)) => "█▁█▁▄"
+  (spark '(1 0 1 0 -1))  => "█▄█▄▁"
+
+  (spark '(0 30 55 80 33 150))                 => "▁▂▃▅▂█"
+  (spark '(0 30 55 80 33 150) :min -100)       => "▃▄▅▆▄█"
+  (spark '(0 30 55 80 33 150) :max 50)         => "▁▅██▅█"
+  (spark '(0 30 55 80 33 150) :min 30 :max 80) => "▁▁▄█▁█"
+
+  (spark '(0 1 2 3 4 5 6 7 8) :key (lambda (x) (sin (* x pi (/ 1.0 4)))))
+  => "▄▆█▆▄▂▁▂▄"
+  (spark '(0 1 2 3 4 5 6 7 8) :key (lambda (x) (cos (* x pi (/ 1.0 4)))))
+  => "█▆▄▂▁▂▄▆█"
+#+END_SRC
+
+*** Custom Ticks
+
+#+BEGIN_SRC lisp
+  (defvar ternary '(-1 0 1 -1 1 0 -1 1 -1))
+
+  (spark ternary)              => "▁▄█▁█▄▁█▁"
+
+  (let ((spark-ticks (vector ?_ ?- ?¯)))
+    (spark ternary))           => "_-¯_¯-_¯_"
+
+  (let ((spark-ticks (vector ?▄ ?⎯ ?▀)))
+    (spark ternary))           => "▄⎯▀▄▀⎯▄▀▄"
+#+END_SRC
+
+** Spark-V
+
+#+BEGIN_SRC lisp
+  ; Life expectancy by WHO region, 2011, bothsexes
+  ;; see. http://apps.who.int/gho/data/view.main.690
+  (defvar life-expectancies '(("Africa" 56)
+                              ("Americans" 76)
+                              ("South-East Asia" 67)
+                              ("Europe" 76)
+                              ("Eastern Mediterranean" 68)
+                              ("Western Pacific" 76)
+                              ("Global" 70)))
+
+  (spark-v life-expectancies :key #'second :scale? nil :newline? nil)
+  =>
+  "▏
+  ██████████████████████████████████████████████████
+  ███████████████████████████▌
+  ██████████████████████████████████████████████████
+  ██████████████████████████████▏
+  ██████████████████████████████████████████████████
+  ███████████████████████████████████▏"
+
+  (spark-v life-expectancies :min 50 :max 80
+                             :key    #'second
+                             :labels (mapcar #'first life-expectancies)
+                             :title "Life Expectancy")
+  =>
+  "
+                   Life Expectancy
+                        50           65           80
+                        ˫------------+-------------˧
+                 Africa █████▋
+              Americans ████████████████████████▎
+        South-East Asia ███████████████▉
+                 Europe ████████████████████████▎
+  Eastern Mediterranean ████████████████▊
+        Western Pacific ████████████████████████▎
+                 Global ██████████████████▋
+  "
+
+  (spark-v '(0 1 2 3 4 5 6 7 8) :key (lambda (x) (sin (* x pi (/ 1.0 4))))
+                                :size 20)
+  "
+  -1.0     0.0     1.0
+  ˫---------+--------˧
+  ██████████▏
+  █████████████████▏
+  ████████████████████
+  █████████████████▏
+  ██████████▏
+  ██▉
+  ▏
+  ██▉
+  █████████▉
+  "
+
+  (spark-v '(0 1 2 3 4 5 6 7 8) :key (lambda (x) (sin (* x pi (/ 1.0 4))))
+                                :size 10)
+  =>
+  "
+  -1.0   1.0
+  ˫--------˧
+  █████▏
+  ████████▏
+  ██████████
+  ████████▏
+  █████▏
+  █▏
+  ▏
+  █▏
+  ████▏
+  "
+
+  (spark-v '(0 1 2 3 4 5 6 7 8) :key (lambda (x) (sin (* x pi (/ 1.0 4))))
+                                :size 1)
+  =>
+  "
+  ▌
+  ▊
+  █
+  ▊
+  ▌
+  ▎
+  ▏
+  ▎
+  ▌
+  "
+#+END_SRC
+
+*** Custom Ticks
+
+#+BEGIN_SRC lisp
+  ;; Japan GDP growth rate, annual
+  ;; see:  http://data.worldbank.org/indicator/NY.GDP.MKTP.KD.ZG
+  (defvar growth-rate
+   '((2007 . 2.192186) (2008 . -1.041636) (2009 . -5.5269766)
+     (2010 . 4.652112) (2011 . -0.57031655) (2012 . 1.945)))
+
+  (spark-v growth-rate :key #'cdr :labels (mapcar #'car growth-rate))
+  =>
+  "
+       -5.5269766        -0.4374323         4.652112
+       ˫---------------------+---------------------˧
+  2007 ██████████████████████████████████▏
+  2008 ███████████████████▊
+  2009 ▏
+  2010 ████████████████████████████████████████████
+  2011 █████████████████████▉
+  2012 █████████████████████████████████▏
+  "
+
+  (let ((spark-vticks (vector ?- ?0 ?+)))
+    (spark-v growth-rate :key (lambda (y-r) (signum (cdr y-r)))
+                         :labels (mapcar #'car growth-rate)
+                         :size 1))
+  =>
+  "
+  2007 +
+  2008 -
+  2009 -
+  2010 +
+  2011 -
+  2012 +
+  "
+#+END_SRC
