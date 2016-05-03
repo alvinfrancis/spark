@@ -2,9 +2,9 @@
 
   This is a straightforward port of [[https://github.com/tkych/cl-spark][cl-spark]] to emacs lisp.
 
-* Usage
+** Usage
 
-** Spark
+*** Spark
 
 #+BEGIN_SRC lisp
   (spark '(1 0 1 0))     => "█▁█▁"
@@ -22,7 +22,7 @@
   => "█▆▄▂▁▂▄▆█"
 #+END_SRC
 
-*** Custom Ticks
+**** Custom Ticks
 
 #+BEGIN_SRC lisp
   (defvar ternary '(-1 0 1 -1 1 0 -1 1 -1))
@@ -36,7 +36,7 @@
     (spark ternary))           => "▄⎯▀▄▀⎯▄▀▄"
 #+END_SRC
 
-** Spark-V
+*** Spark-V
 
 #+BEGIN_SRC lisp
   ; Life expectancy by WHO region, 2011, bothsexes
@@ -126,7 +126,7 @@
   "
 #+END_SRC
 
-*** Custom Ticks
+**** Custom Ticks
 
 #+BEGIN_SRC lisp
   ;; Japan GDP growth rate, annual
