@@ -93,10 +93,10 @@ Examples:
   => \"▄▆█▆▄▂▁▂▄\"
   (spark '(0 1 2 3 4 5 6 7 8) :key (lambda (x) (cos (* x pi (/ 1.0 4)))))
   => \"█▆▄▂▁▂▄▆█\""
-  (check-type numbers list)
-  (check-type min     (or null real))
-  (check-type max     (or null real))
-  (check-type key     (or symbol function))
+  (cl-check-type numbers list)
+  (cl-check-type min     (or null real))
+  (cl-check-type max     (or null real))
+  (cl-check-type key     (or symbol function))
   (when key (setf numbers (mapcar key numbers)))
 
   ;; Empty data case:
@@ -290,12 +290,12 @@ Examples:
   ▌
   \""
 
-  (check-type numbers  list)
-  (check-type min      (or null real))
-  (check-type max      (or null real))
-  (check-type key      (or symbol function))
-  (check-type size     (integer 1 *))
-  (check-type labels   list)
+  (cl-check-type numbers  list)
+  (cl-check-type min      (or null real))
+  (cl-check-type max      (or null real))
+  (cl-check-type key      (or symbol function))
+  (cl-check-type size     (integer 1 *))
+  (cl-check-type labels   list)
 
   (when key (setf numbers (mapcar key numbers)))
 
