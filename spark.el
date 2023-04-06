@@ -315,17 +315,17 @@ Examples:
 
   ;; Check max ~ min.
   (cond ((< max min) (error "max %s < min %s." max min))
-        ((= max min) (incf max))        ; ensure all bars are in min.
+        ((= max min) (cl-incf max))        ; ensure all bars are in min.
         (t nil))
 
   (let ((max-lengeth-label nil))
     (when labels
       ;; Ensure num labels equals to num numbers.
       (let ((diff (- (length numbers) (length labels))))
-        (cond ((plusp diff)
+        (cond ((cl-plusp diff)
                ;; Add padding lacking labels not to miss data.
                (setf labels (append labels (cl-loop repeat diff collect ""))))
-              ((minusp diff)
+              ((cl-minusp diff)
                ;; Remove superfluous labels to remove redundant spaces.
                (setf labels (butlast labels (abs diff))))
               (t nil)))
@@ -376,7 +376,7 @@ Examples:
                                   (apply 'concat result))))))
 
 (defun spark--generate-bar (number unit min max num-content-ticks)
-  (multiple-value-bind
+  (cl-multiple-value-bind
       (units frac) (cl-floor (- number min) (* unit num-content-ticks))
     (with-output-to-string
       (let ((most-tick (aref spark-vticks num-content-ticks)))
@@ -393,7 +393,7 @@ Examples:
                             (+ 1 size max-lengeth-label)
                           size)
                         (length title-string)) 2)))
-    (when (plusp mid)
+    (when (cl-plusp mid)
       (format "%s\n"
               (cl-replace (make-string (if max-lengeth-label
                                            (+ 1 size max-lengeth-label)
@@ -409,31 +409,31 @@ Examples:
       (cl-loop repeat num-spaces
                with n = 0
                do (progn
-                    (incf (nth n lengths))
+                    (cl-incf (nth n lengths))
                     (if (< n (1- (1- num-elements)))
-                        (incf n)
+                        (cl-incf n)
                       (setf n 0))))
       lengths)))
 
 (defun spark--justify-interleave-spaces (strs spaces)
   (cond ((and (eql strs nil) (eql spaces nil)) nil)
         ((eql strs nil) (cons nil (spark--justify-interleave-spaces spaces strs))) ;; rule #2, current value is nil
-        (t (cons (first strs) (spark--justify-interleave-spaces spaces (rest strs))))))
+        (t (cons (cl-first strs) (spark--justify-interleave-spaces spaces (cl-rest strs))))))
 
 (defun spark--justify-strings (mincol strs &optional padchar)
   (let* ((padchar (or padchar 32))
          (leftover-space (- mincol
-                            (length (apply #'concatenate 'string strs))))
+                            (length (apply #'cl-concatenate 'string strs))))
          (spaces (mapcar (lambda (l)
                            (make-string l padchar))
                          (spark--justify-space-lengths leftover-space (length strs)))))
-    (apply #'concatenate 'string (spark--justify-interleave-spaces strs spaces))))
+    (apply #'cl-concatenate 'string (spark--justify-interleave-spaces strs spaces))))
 
 (defun spark--generate-scale (min max size max-lengeth-label)
   (let* ((min-string  (number-to-string min))
          (max-string  (number-to-string max))
          (num-padding (- size (length min-string) (length max-string))))
-    (when (plusp num-padding)
+    (when (cl-plusp num-padding)
       (let* ((mid        (/ (+ max min) 2.0))
              (mid-string (number-to-string mid))
              (num-indent (if max-lengeth-label (1+ max-lengeth-label) 0)))
